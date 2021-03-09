@@ -1,7 +1,7 @@
 <template>
 	<div class="canvas">
 		<canvas
-			:id="id"
+			id="drawablecanvas"
 			width="300"
 			height="300"
 			@mousemove="onMouseMove"
@@ -9,7 +9,7 @@
 			@mouseup="onMouseUp"
 			@mouseleave="onMouseUp"
 		>
-			{{ id }} Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
 		<button @click="loadPreviousCanvasState">
 			Undo
@@ -21,10 +21,8 @@
 import Vue from "vue";
 
 export default Vue.extend({
-	name: "Canvas",
-	props: {
-		id: String
-	},
+	name: "drawablecanvas",
+	props: {},
 	data(): {
 		canvasContext: CanvasRenderingContext2D | null;
 		canvasStates: any[];
@@ -58,7 +56,8 @@ export default Vue.extend({
 			if (ctx && this.isMouseDown) {
 				ctx.beginPath();
 				ctx.strokeStyle = "black";
-				ctx.lineWidth = 1;
+				ctx.lineCap = "square";
+				ctx.lineWidth = 14;
 				ctx.moveTo(x1, y1);
 				ctx.lineTo(x2, y2);
 				ctx.stroke();
@@ -66,7 +65,9 @@ export default Vue.extend({
 			}
 		},
 		saveCanvasState: function() {
-			const canvasRef = document.getElementById(this.id) as HTMLCanvasElement;
+			const canvasRef = document.getElementById(
+				"drawablecanvas"
+			) as HTMLCanvasElement;
 			if (
 				canvasRef.toDataURL() !==
 				this.canvasStates[this.canvasStates.length - 1]
@@ -91,7 +92,9 @@ export default Vue.extend({
 		}
 	},
 	mounted() {
-		const canvasRef = document.getElementById(this.id) as HTMLCanvasElement;
+		const canvasRef = document.getElementById(
+			"drawablecanvas"
+		) as HTMLCanvasElement;
 		this.canvasContext = canvasRef.getContext("2d") as CanvasRenderingContext2D;
 	}
 });

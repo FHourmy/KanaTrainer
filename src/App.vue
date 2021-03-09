@@ -1,18 +1,18 @@
 <template>
 	<div id="app">
 		<img alt="Vue logo" src="./assets/logo.png" />
-		<Canvas id="canvasId" />
+		<DrawingTraining />
 	</div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import Canvas from "@/components/Canvas.vue";
+import DrawingTraining from "@/screens/DrawingTraining.vue";
 
 export default Vue.extend({
 	name: "App",
 	components: {
-		Canvas
+		DrawingTraining
 	}
 });
 </script>
