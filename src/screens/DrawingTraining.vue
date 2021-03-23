@@ -22,6 +22,7 @@
 		<button @click="loadPreviousDrawableCanvasState">
 			undo
 		</button>
+		{{ drawingResult }}
 	</div>
 </template>
 
@@ -29,8 +30,7 @@
 import Vue from "vue";
 import DrawableCanvas from "../components/DrawableCanvas.vue";
 import ModelCanvas from "../components/ModelCanvas.vue";
-import pixelmatch from "pixelmatch";
-import { getRandomKana } from "@/utils";
+import { compareCanvas, getDrawingResult, getRandomKana } from "@/utils";
 
 export default Vue.extend({
 	name: "DrawingTraining",
@@ -42,13 +42,23 @@ export default Vue.extend({
 	data(): {
 		drawableCanvasStates: any[];
 		kanatype: "hira" | "kata";
+		originalDiff: number;
+		currentDiff: number;
+		drawingResult: string;
 	} {
 		return {
 			kanatype: "hira",
-			drawableCanvasStates: []
+			drawableCanvasStates: [],
+			originalDiff: -1,
+			currentDiff: -1,
+			drawingResult: ""
 		};
 	},
-
+	computed: {
+		kanaData(): { kana: string; romaji: string } {
+			return getRandomKana(this.kanatype);
+		}
+	},
 	methods: {
 		// hacky way to retrigger computation of kana (we fake a change in kanatype)
 		getNewKana: function() {
@@ -59,32 +69,20 @@ export default Vue.extend({
 				this.kanatype = "hira";
 				this.kanatype = "kata";
 			}
+			this.resetState();
 		},
 		compare: function() {
-			const drawablecanvas = document.getElementById(
-				"drawablecanvas"
-			) as HTMLCanvasElement;
-			const modelcanvas = document.getElementById(
-				"modelcanvas"
-			) as HTMLCanvasElement;
-			const drawableImage = drawablecanvas
-				.getContext("2d")
-				?.getImageData(0, 0, 300, 300);
-			const modelImage = modelcanvas
-				.getContext("2d")
-				?.getImageData(0, 0, 300, 300);
-			if (drawableImage && modelImage) {
-				// const diffImage = new ImageData(300, 300);
-				const diff = pixelmatch(
-					drawableImage.data,
-					modelImage.data,
-					null,
-					300,
-					300,
-					{ threshold: 0.5 }
-				);
-				console.log(diff);
-			}
+			// eslint-disable-next-line
+			this.currentDiff = compareCanvas(
+				document.getElementById("drawablecanvas") as HTMLCanvasElement,
+				document.getElementById("modelcanvas") as HTMLCanvasElement,
+				300,
+				300
+			);
+			this.drawingResult = getDrawingResult(
+				this.currentDiff,
+				this.originalDiff
+			);
 		},
 		saveCanvasState: function(canvasState: any) {
 			if (
@@ -111,12 +109,30 @@ export default Vue.extend({
 				}
 				this.drawableCanvasStates.pop();
 			}
+		},
+		resetState: function() {
+			let ref = document.getElementById("drawablecanvas") as HTMLCanvasElement;
+			const ctx = ref.getContext("2d");
+			if (ctx) {
+				ctx.clearRect(0, 0, 300, 300);
+			}
+			this.drawableCanvasStates = [];
+			this.originalDiff = compareCanvas(
+				document.getElementById("drawablecanvas") as HTMLCanvasElement,
+				document.getElementById("modelcanvas") as HTMLCanvasElement,
+				300,
+				300
+			);
+			this.drawingResult = "";
 		}
 	},
-	computed: {
-		kanaData(): { kana: string; romaji: string } {
-			return getRandomKana(this.kanatype);
-		}
+	mounted() {
+		this.originalDiff = compareCanvas(
+			document.getElementById("drawablecanvas") as HTMLCanvasElement,
+			document.getElementById("modelcanvas") as HTMLCanvasElement,
+			300,
+			300
+		);
 	}
 });
 </script>
