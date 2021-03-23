@@ -1,19 +1,19 @@
 <template>
-	<div class="canvas">
-		<canvas
-			id="drawablecanvas"
-			width="300"
-			height="300"
-			@mousemove="onMouseMove"
-			@mousedown="onMouseDown"
-			@mouseup="onMouseUp"
-			@mouseleave="onMouseUp"
-		>
-			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-		</canvas>
-		<button @click="loadPreviousCanvasState">
-			Undo
-		</button>
+	<div>
+		<div class="canvas">
+			<canvas
+				id="drawablecanvas"
+				:class="canvasStyle"
+				width="300"
+				height="300"
+				@mousemove="onMouseMove"
+				@mousedown="onMouseDown"
+				@mouseup="onMouseUp"
+				@mouseleave="onMouseUp"
+			>
+				Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+			</canvas>
+		</div>
 	</div>
 </template>
 
@@ -22,10 +22,15 @@ import Vue from "vue";
 
 export default Vue.extend({
 	name: "drawablecanvas",
-	props: {},
+	props: {
+		canvasStyle: {
+			type: String,
+			default: "drawablecanvasdefault",
+			required: false
+		}
+	},
 	data(): {
 		canvasContext: CanvasRenderingContext2D | null;
-		canvasStates: any[];
 		isMouseDown: boolean;
 		x: number;
 		y: number;
@@ -34,8 +39,7 @@ export default Vue.extend({
 			canvasContext: null,
 			isMouseDown: false,
 			x: 0,
-			y: 0,
-			canvasStates: []
+			y: 0
 		};
 	},
 	methods: {
@@ -68,27 +72,8 @@ export default Vue.extend({
 			const canvasRef = document.getElementById(
 				"drawablecanvas"
 			) as HTMLCanvasElement;
-			if (
-				canvasRef.toDataURL() !==
-				this.canvasStates[this.canvasStates.length - 1]
-			) {
-				this.canvasStates.push(canvasRef.toDataURL());
-			}
-		},
-		loadPreviousCanvasState: function() {
-			let ctx = this.canvasContext;
-			if (ctx) {
-				ctx.clearRect(0, 0, 300, 300);
-				// draw previous rect if the is one
-				if (this.canvasStates.length - 1 > 0) {
-					var canvasPic = new Image();
-					canvasPic.src = this.canvasStates[this.canvasStates.length - 2];
-					canvasPic.onload = function() {
-						ctx?.drawImage(canvasPic, 0, 0);
-					};
-				}
-				this.canvasStates.pop();
-			}
+
+			this.$emit("new-line", canvasRef.toDataURL());
 		}
 	},
 	mounted() {
@@ -102,7 +87,12 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-canvas {
-	background-color: antiquewhite;
+.drawablecanvasdefault {
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.8);
+	margin: auto;
+	left: 0;
+	right: 0;
+	z-index: 2;
 }
 </style>

@@ -1,63 +1,107 @@
 <template>
 	<div class="canvas">
-		<select v-model="kanatype">
-			<option>hira</option>
-			<option>kata</option>
-		</select>
-		<DrawableCanvas />
-		<canvas id="modelcanvas" width="300" height="300">
-			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-		</canvas>
-		<button>
-			Compare
+		<div>
+			<select v-model="kanatype">
+				<option>hira</option>
+				<option>kata</option> </select
+			><button @click="compare">
+				Compare
+			</button>
+		</div>
+		<div id="canvascontainer">
+			<DrawableCanvas @new-line="saveCanvasState" />
+			<ModelCanvas :kanatype="kanatype" />
+		</div>
+		<button @click="loadPreviousDrawableCanvasState">
+			undo
 		</button>
 	</div>
 </template>
 
 <script lang="ts">
-import { getRandomKana } from "@/utils";
 import Vue from "vue";
 import DrawableCanvas from "../components/DrawableCanvas.vue";
+import ModelCanvas from "../components/ModelCanvas.vue";
+import pixelmatch from "pixelmatch";
+
 export default Vue.extend({
 	name: "DrawingTraining",
 	components: {
-		DrawableCanvas
+		DrawableCanvas,
+		ModelCanvas
 	},
 	props: {},
 	data(): {
-		canvasContext: CanvasRenderingContext2D | null;
+		drawableCanvasStates: any[];
 		kanatype: "hira" | "kata";
 	} {
 		return {
 			kanatype: "hira",
-			canvasContext: null
+			drawableCanvasStates: []
 		};
 	},
 	methods: {
-		drawKana: function() {
-			if (this.canvasContext) {
-				this.canvasContext.clearRect(0, 0, 300, 300);
-				this.canvasContext.font = "350px Arial";
-				this.canvasContext.fillText(getRandomKana(this.kanatype), -25, 280);
+		compare: function() {
+			const drawablecanvas = document.getElementById(
+				"drawablecanvas"
+			) as HTMLCanvasElement;
+			const modelcanvas = document.getElementById(
+				"modelcanvas"
+			) as HTMLCanvasElement;
+			const drawableImage = drawablecanvas
+				.getContext("2d")
+				?.getImageData(0, 0, 300, 300);
+			const modelImage = modelcanvas
+				.getContext("2d")
+				?.getImageData(0, 0, 300, 300);
+			if (drawableImage && modelImage) {
+				// const diffImage = new ImageData(300, 300);
+				const diff = pixelmatch(
+					drawableImage.data,
+					modelImage.data,
+					null,
+					300,
+					300,
+					{ threshold: 0.5 }
+				);
+				console.log(diff);
+			}
+		},
+		saveCanvasState: function(canvasState: any) {
+			if (
+				canvasState !==
+				this.drawableCanvasStates[this.drawableCanvasStates.length - 1]
+			) {
+				this.drawableCanvasStates.push(canvasState);
+			}
+		},
+		loadPreviousDrawableCanvasState: function() {
+			let ref = document.getElementById("drawablecanvas") as HTMLCanvasElement;
+			const ctx = ref.getContext("2d");
+			if (ctx) {
+				ctx.clearRect(0, 0, 300, 300);
+				// draw previous rect if there is one
+				console.log(this.drawableCanvasStates.length);
+				if (this.drawableCanvasStates.length - 1 > 0) {
+					var canvasPic = new Image();
+					canvasPic.src = this.drawableCanvasStates[
+						this.drawableCanvasStates.length - 2
+					];
+					canvasPic.onload = function() {
+						ctx?.drawImage(canvasPic, 0, 0);
+					};
+				}
+				this.drawableCanvasStates.pop();
 			}
 		}
-	},
-	updated() {
-		this.drawKana();
-	},
-	mounted() {
-		const canvasRef = document.getElementById(
-			"modelcanvas"
-		) as HTMLCanvasElement;
-		this.canvasContext = canvasRef.getContext("2d") as CanvasRenderingContext2D;
-		this.drawKana();
 	}
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-#modelcanvas {
-	background-color: antiquewhite;
+#canvascontainer {
+	position: relative;
+	height: 300px;
 }
 </style>
