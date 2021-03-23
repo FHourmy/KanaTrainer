@@ -7,7 +7,6 @@
 </template>
 
 <script lang="ts">
-import { getRandomKana } from "@/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -18,10 +17,10 @@ export default Vue.extend({
 			default: "modelcanvasdefault",
 			required: false
 		},
-		kanatype: String
+		kana: String
 	},
 	watch: {
-		kanatype: function() {
+		kana: function() {
 			this.drawKana();
 		}
 	},
@@ -32,13 +31,10 @@ export default Vue.extend({
 	},
 	methods: {
 		drawKana: function() {
-			if (
-				this.canvasContext &&
-				(this.kanatype === "hira" || this.kanatype === "kata")
-			) {
+			if (this.canvasContext) {
 				this.canvasContext.clearRect(0, 0, 300, 300);
 				this.canvasContext.font = "350px Arial";
-				this.canvasContext.fillText(getRandomKana(this.kanatype), -25, 280);
+				this.canvasContext.fillText(this.kana, -25, 280);
 			}
 		}
 	},

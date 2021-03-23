@@ -3,14 +3,21 @@
 		<div>
 			<select v-model="kanatype">
 				<option>hira</option>
-				<option>kata</option> </select
-			><button @click="compare">
+				<option>kata</option>
+			</select>
+			<button @click="getNewKana">
+				new kana
+			</button>
+			<button @click="compare">
 				Compare
 			</button>
 		</div>
+		<div id="currentkana">
+			{{ `${kanaData.romaji.toUpperCase()} ${kanaData.kana}` }}
+		</div>
 		<div id="canvascontainer">
 			<DrawableCanvas @new-line="saveCanvasState" />
-			<ModelCanvas :kanatype="kanatype" />
+			<ModelCanvas :kana="kanaData.kana" />
 		</div>
 		<button @click="loadPreviousDrawableCanvasState">
 			undo
@@ -23,6 +30,7 @@ import Vue from "vue";
 import DrawableCanvas from "../components/DrawableCanvas.vue";
 import ModelCanvas from "../components/ModelCanvas.vue";
 import pixelmatch from "pixelmatch";
+import { getRandomKana } from "@/utils";
 
 export default Vue.extend({
 	name: "DrawingTraining",
@@ -40,7 +48,18 @@ export default Vue.extend({
 			drawableCanvasStates: []
 		};
 	},
+
 	methods: {
+		// hacky way to retrigger computation of kana (we fake a change in kanatype)
+		getNewKana: function() {
+			if (this.kanatype === "hira") {
+				this.kanatype = "kata";
+				this.kanatype = "hira";
+			} else {
+				this.kanatype = "hira";
+				this.kanatype = "kata";
+			}
+		},
 		compare: function() {
 			const drawablecanvas = document.getElementById(
 				"drawablecanvas"
@@ -81,7 +100,6 @@ export default Vue.extend({
 			if (ctx) {
 				ctx.clearRect(0, 0, 300, 300);
 				// draw previous rect if there is one
-				console.log(this.drawableCanvasStates.length);
 				if (this.drawableCanvasStates.length - 1 > 0) {
 					var canvasPic = new Image();
 					canvasPic.src = this.drawableCanvasStates[
@@ -94,12 +112,20 @@ export default Vue.extend({
 				this.drawableCanvasStates.pop();
 			}
 		}
+	},
+	computed: {
+		kanaData(): { kana: string; romaji: string } {
+			return getRandomKana(this.kanatype);
+		}
 	}
 });
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+#currentkana {
+	color: white;
+}
 #canvascontainer {
 	position: relative;
 	height: 300px;
