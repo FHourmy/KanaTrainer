@@ -1,13 +1,21 @@
 <template>
 	<div class="canvas">
 		<div>
-			<select v-model="kanatype">
-				<option>hira</option>
-				<option>kata</option>
-			</select>
-			<button @click="getNewKana">
-				new kana
+			<div>
+				<select v-model="kanatype">
+					<option>hira</option>
+					<option>kata</option>
+				</select>
+			</div>
+			<div>
+				<button @click="getNewKana">
+					new kana
+				</button>
+			</div>
+			<button @click="loadPreviousDrawableCanvasState">
+				undo
 			</button>
+
 			<button @click="compare">
 				Compare
 			</button>
@@ -19,10 +27,9 @@
 			<DrawableCanvas @new-line="saveCanvasState" />
 			<ModelCanvas :kana="kanaData.kana" />
 		</div>
-		<button @click="loadPreviousDrawableCanvasState">
-			undo
-		</button>
-		{{ drawingResult }}
+		<div :class="drawingResult === 'BAD' ? 'bad' : 'good'">
+			{{ drawingResult }}
+		</div>
 	</div>
 </template>
 
@@ -145,5 +152,11 @@ export default Vue.extend({
 #canvascontainer {
 	position: relative;
 	height: 300px;
+}
+.good {
+	color: green;
+}
+.bad {
+	color: red;
 }
 </style>
