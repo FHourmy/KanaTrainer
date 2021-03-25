@@ -1,6 +1,12 @@
 <template>
 	<div class="canvas">
-		<canvas id="modelcanvas" :class="canvasStyle" width="300" height="300">
+		<canvas
+			role="modelcanvas"
+			id="modelcanvas"
+			:class="canvasStyle"
+			width="300"
+			height="300"
+		>
 			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
 		</canvas>
 	</div>

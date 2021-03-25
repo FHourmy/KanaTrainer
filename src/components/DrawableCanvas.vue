@@ -2,6 +2,7 @@
 	<div>
 		<div class="canvas">
 			<canvas
+				role="drawablecanvas"
 				id="drawablecanvas"
 				:class="canvasStyle"
 				width="300"
@@ -60,7 +61,7 @@ export default Vue.extend({
 			if (ctx && this.isMouseDown) {
 				ctx.beginPath();
 				ctx.strokeStyle = "black";
-				ctx.lineCap = "square";
+				ctx.lineCap = "round";
 				ctx.lineWidth = 14;
 				ctx.moveTo(x1, y1);
 				ctx.lineTo(x2, y2);
