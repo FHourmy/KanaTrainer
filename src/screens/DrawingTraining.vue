@@ -2,7 +2,7 @@
 	<div class="canvas">
 		<div>
 			<div>
-				<select v-model="kanatype">
+				<select role="select-kana" v-model="kanatype">
 					<option>hira</option>
 					<option>kata</option>
 				</select>
