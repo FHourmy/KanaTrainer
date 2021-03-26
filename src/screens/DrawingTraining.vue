@@ -159,4 +159,7 @@ export default Vue.extend({
 .bad {
 	color: red;
 }
+.canvas {
+	flex: 1;
+}
 </style>

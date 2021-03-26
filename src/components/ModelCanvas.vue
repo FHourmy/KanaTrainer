@@ -1,5 +1,5 @@
 <template>
-	<div class="canvas">
+	<div>
 		<canvas
 			role="modelcanvas"
 			id="modelcanvas"

@@ -1,20 +1,18 @@
 <template>
 	<div>
-		<div class="canvas">
-			<canvas
-				role="drawablecanvas"
-				id="drawablecanvas"
-				:class="canvasStyle"
-				width="300"
-				height="300"
-				@mousemove="onMouseMove"
-				@mousedown="onMouseDown"
-				@mouseup="onMouseUp"
-				@mouseleave="onMouseUp"
-			>
-				Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
-			</canvas>
-		</div>
+		<canvas
+			role="drawablecanvas"
+			id="drawablecanvas"
+			:class="canvasStyle"
+			width="300"
+			height="300"
+			@mousemove="onMouseMove"
+			@mousedown="onMouseDown"
+			@mouseup="onMouseUp"
+			@mouseleave="onMouseUp"
+		>
+			Désolé, votre navigateur ne prend pas en charge &lt;canvas&gt;.
+		</canvas>
 	</div>
 </template>
 

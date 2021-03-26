@@ -22,6 +22,7 @@ html {
 	display: flex;
 	flex-grow: 1;
 	min-height: 600px;
+	min-width: 600px;
 }
 body {
 	padding: 0px;
@@ -47,6 +48,10 @@ body {
 
 #screens {
 	flex: 1;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+	align-items: center;
 }
 #nav a {
 	font-weight: bold;
