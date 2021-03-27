@@ -1,26 +1,26 @@
 <template>
 	<div id="nav">
-		<router-link class="router-link" to="/">
+		<router-link class="router-link" to="/" role="nav-button">
 			<div class="menu-item">
 				<img src="../assets/home.png" height="50px" width="50px" />
 			</div>
 		</router-link>
-		<router-link class="router-link" to="/drawing">
+		<router-link class="router-link" to="/drawing" role="nav-button">
 			<div class="menu-item">
 				<img src="../assets/brush.png" height="50px" width="50px" />
 			</div>
 		</router-link>
-		<router-link class="router-link" to="/identify">
+		<router-link class="router-link" to="/identify" role="nav-button">
 			<div class="menu-item">
 				<img src="../assets/view.png" height="50px" width="50px" />
 			</div>
 		</router-link>
-		<router-link class="router-link" to="/IdentifyAndDraw">
+		<router-link class="router-link" to="/IdentifyAndDraw" role="nav-button">
 			<div class="menu-item">
 				<img src="../assets/identifyAndDraw.png" height="50px" width="50px" />
 			</div>
 		</router-link>
-		<router-link class="router-link" to="/stats">
+		<router-link class="router-link" to="/stats" role="nav-button">
 			<div class="menu-item">
 				<img src="../assets/stats.png" height="50px" width="50px" />
 			</div>

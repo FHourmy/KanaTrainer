@@ -1,10 +1,4 @@
-import {
-	fireEvent,
-	getByText,
-	render,
-	screen,
-	waitFor
-} from "@testing-library/vue";
+import { fireEvent, render, screen, waitFor } from "@testing-library/vue";
 import DrawingTraining from "../DrawingTraining.vue";
 import "@testing-library/jest-dom";
 import { compareCanvas, getRandomKana } from "@/utils";
@@ -34,11 +28,7 @@ describe("Drawing Training", () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 	});
-	test("both canvases are rendered", () => {
-		render(DrawingTraining);
-		expect(screen.getByRole("modelcanvas")).not.toBeNull();
-		expect(screen.getByRole("drawablecanvas")).not.toBeNull();
-	});
+
 	test("compare button triggers comparison and display a result string", async () => {
 		expect(compareCanvas).not.toHaveBeenCalled();
 		render(DrawingTraining);
@@ -49,21 +39,7 @@ describe("Drawing Training", () => {
 		// wait for to wait state update
 		await waitFor(() => screen.getByText("BAD"));
 	});
-	test("undo trigger a clear rect", () => {
-		render(DrawingTraining);
-		fireEvent.mouseDown(screen.getByRole("drawablecanvas"));
-		fireEvent.mouseMove(screen.getByRole("drawablecanvas"), {
-			offsetX: 30,
-			offsetY: 30
-		});
-		const originalDrawsNumber = getDrawCallsLength();
 
-		fireEvent.click(screen.getByRole("button", { name: "undo" }));
-		const afterUndoDrawsNumber = getDrawCallsLength();
-
-		// clear being a "draw call" we compare the number of draws. Can't find a better way
-		expect(afterUndoDrawsNumber).toBeGreaterThan(originalDrawsNumber);
-	});
 	test("New kana cleans everything and changes displayed kana", async () => {
 		expect(getRandomKana).not.toHaveBeenCalled();
 		render(DrawingTraining);
@@ -82,14 +58,14 @@ describe("Drawing Training", () => {
 		// trigger new kana
 		fireEvent.click(screen.getByRole("button", { name: "new kana" }));
 
-		const afterUndoDrawsNumber = getDrawCallsLength();
-
-		// clear triggered by new kana
-		expect(afterUndoDrawsNumber).toBe(originalDrawsNumber + 1);
 		// new kana get and found
 		await waitFor(() => expect(getRandomKana).toHaveBeenCalledTimes(2));
+		const afterUndoDrawsNumber = getDrawCallsLength();
+		// clear triggered by new kana
+		expect(afterUndoDrawsNumber).toBe(originalDrawsNumber + 1);
 		expect(screen.getByText(getLastKana(), { exact: false }));
 	});
+
 	test("changing kanatype generate a new kana", async () => {
 		expect(getRandomKana).not.toHaveBeenCalled();
 		render(DrawingTraining);

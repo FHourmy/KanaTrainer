@@ -12,9 +12,6 @@
 					new kana
 				</button>
 			</div>
-			<button @click="loadPreviousDrawableCanvasState">
-				undo
-			</button>
 
 			<button @click="compare">
 				Compare
@@ -23,10 +20,7 @@
 		<div id="currentkana">
 			{{ `${kanaData.romaji.toUpperCase()} ${kanaData.kana}` }}
 		</div>
-		<div id="canvascontainer">
-			<DrawableCanvas @new-line="saveCanvasState" />
-			<ModelCanvas :kana="kanaData.kana" />
-		</div>
+		<Drawer :kanaData="kanaData" />
 		<div :class="drawingResult === 'BAD' ? 'bad' : 'good'">
 			{{ drawingResult }}
 		</div>
@@ -35,19 +29,16 @@
 
 <script lang="ts">
 import Vue from "vue";
-import DrawableCanvas from "../components/DrawableCanvas.vue";
-import ModelCanvas from "../components/ModelCanvas.vue";
+import Drawer from "../components/Drawer.vue";
 import { compareCanvas, getDrawingResult, getRandomKana } from "@/utils";
 
 export default Vue.extend({
 	name: "DrawingTraining",
 	components: {
-		DrawableCanvas,
-		ModelCanvas
+		Drawer
 	},
 	props: {},
 	data(): {
-		drawableCanvasStates: any[];
 		kanatype: "hira" | "kata";
 		originalDiff: number;
 		currentDiff: number;
@@ -55,7 +46,6 @@ export default Vue.extend({
 	} {
 		return {
 			kanatype: "hira",
-			drawableCanvasStates: [],
 			originalDiff: -1,
 			currentDiff: -1,
 			drawingResult: ""
@@ -91,39 +81,7 @@ export default Vue.extend({
 				this.originalDiff
 			);
 		},
-		saveCanvasState: function(canvasState: any) {
-			if (
-				canvasState !==
-				this.drawableCanvasStates[this.drawableCanvasStates.length - 1]
-			) {
-				this.drawableCanvasStates.push(canvasState);
-			}
-		},
-		loadPreviousDrawableCanvasState: function() {
-			let ref = document.getElementById("drawablecanvas") as HTMLCanvasElement;
-			const ctx = ref.getContext("2d");
-			if (ctx) {
-				ctx.clearRect(0, 0, 300, 300);
-				// draw previous rect if there is one
-				if (this.drawableCanvasStates.length - 1 > 0) {
-					var canvasPic = new Image();
-					canvasPic.src = this.drawableCanvasStates[
-						this.drawableCanvasStates.length - 2
-					];
-					canvasPic.onload = function() {
-						ctx?.drawImage(canvasPic, 0, 0);
-					};
-				}
-				this.drawableCanvasStates.pop();
-			}
-		},
 		resetState: function() {
-			let ref = document.getElementById("drawablecanvas") as HTMLCanvasElement;
-			const ctx = ref.getContext("2d");
-			if (ctx) {
-				ctx.clearRect(0, 0, 300, 300);
-			}
-			this.drawableCanvasStates = [];
 			this.originalDiff = compareCanvas(
 				document.getElementById("drawablecanvas") as HTMLCanvasElement,
 				document.getElementById("modelcanvas") as HTMLCanvasElement,
