@@ -20,6 +20,11 @@
 				<img src="../assets/identifyAndDraw.png" height="50px" width="50px" />
 			</div>
 		</router-link>
+		<router-link class="router-link" to="/stats">
+			<div class="menu-item">
+				<img src="../assets/stats.png" height="50px" width="50px" />
+			</div>
+		</router-link>
 	</div>
 </template>
 
