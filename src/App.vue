@@ -1,19 +1,21 @@
 <template>
 	<div id="app">
-		<div id="nav">
-			<div class="rlink">
-				<router-link to="/">Home</router-link>
-			</div>
-			<div class="rlink">
-				<router-link class="router-link" to="/drawing">Drawing</router-link>
-			</div>
-		</div>
+		<Router />
 		<div id="screens">
 			<router-view />
 		</div>
 	</div>
 </template>
-
+<script lang="ts">
+import Vue from "vue";
+import Router from "./router/Router.vue";
+export default Vue.extend({
+	name: "App",
+	components: {
+		Router
+	}
+});
+</script>
 <style>
 html {
 	background-color: #16161d;
@@ -40,28 +42,11 @@ body {
 	flex: 1;
 	height: 100%;
 }
-
-#nav {
-	width: 100px;
-	box-shadow: 3px -5px 5px 0px black;
-}
-
 #screens {
 	flex: 1;
 	display: flex;
 	align-content: center;
 	justify-content: center;
 	align-items: center;
-}
-#nav a {
-	font-weight: bold;
-	color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-	color: #42b983;
-}
-.router-link {
-	flex: 0 0 100%;
 }
 </style>
