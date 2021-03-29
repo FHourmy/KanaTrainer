@@ -6,6 +6,7 @@
 				<span
 					><Select
 						id="select-kana"
+						role="select-kana"
 						:options="[
 							{ label: 'Hiraganas', value: 'hira' },
 							{ label: 'Katakanas', value: 'kata' }
