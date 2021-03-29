@@ -9,6 +9,8 @@
 <script lang="ts">
 import Vue from "vue";
 import Router from "./router/Router.vue";
+import "vue-select/dist/vue-select.css";
+
 export default Vue.extend({
 	name: "App",
 	components: {
@@ -48,5 +50,24 @@ body {
 	align-content: center;
 	justify-content: center;
 	align-items: center;
+}
+.custom-button {
+	color: white;
+	padding: 5px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 5px;
+	transition-property: background-color;
+	transition-duration: 0.5s;
+	display: inline-block;
+	cursor: pointer;
+}
+.custom-button:hover {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+.vs__selected {
+	color: white;
+}
+input.vs__search {
+	color: white;
 }
 </style>

@@ -48,14 +48,13 @@ export default Vue.extend({
 	color: #2c3e50;
 }
 
-#nav a.router-link-exact-active {
-	color: #42b983;
-}
 .router-link {
 	flex: 0 0 100%;
 	opacity: 0.4;
 	display: flex;
 	justify-content: center;
+	transition-property: opacity;
+	transition-duration: 0.3s;
 }
 .router-link-exact-active {
 	opacity: 0.8;

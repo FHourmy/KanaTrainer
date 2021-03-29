@@ -1,24 +1,36 @@
 <template>
 	<div class="canvas">
 		<div>
-			<div>
-				<select role="select-kana" v-model="kanatype">
-					<option>hira</option>
-					<option>kata</option>
-				</select>
+			<div class="selectdiv">
+				You are learning
+				<span
+					><Select
+						id="select-kana"
+						:options="[
+							{ label: 'Hiraganas', value: 'hira' },
+							{ label: 'Katakanas', value: 'kata' }
+						]"
+						:reduce="(sillabary) => sillabary.value"
+						v-model="kanatype"
+						:clearable="false"
+				/></span>
+			</div>
+			<div id="currentkana">
+				Please draw a "
+				{{ `${kanaData.romaji.toUpperCase()} ${kanaData.kana}` }}"
 			</div>
 			<div>
-				<button @click="getNewKana">
-					new kana
-				</button>
+				<div
+					role="button"
+					class="custom-button kana-button"
+					@click="getNewKana"
+				>
+					New kana
+				</div>
+				<div role="button" class="custom-button kana-button" @click="compare">
+					Compare
+				</div>
 			</div>
-
-			<button @click="compare">
-				Compare
-			</button>
-		</div>
-		<div id="currentkana">
-			{{ `${kanaData.romaji.toUpperCase()} ${kanaData.kana}` }}
 		</div>
 		<Drawer :kanaData="kanaData" />
 		<div :class="drawingResult === 'BAD' ? 'bad' : 'good'">
@@ -31,11 +43,13 @@
 import Vue from "vue";
 import Drawer from "../components/Drawer.vue";
 import { compareCanvas, getDrawingResult, getRandomKana } from "@/utils";
+import Select from "vue-select";
 
 export default Vue.extend({
 	name: "DrawingTraining",
 	components: {
-		Drawer
+		Drawer,
+		Select
 	},
 	props: {},
 	data(): {
@@ -106,11 +120,14 @@ export default Vue.extend({
 <style scoped>
 #currentkana {
 	color: white;
+	margin-top: 15px;
+	font-size: 32px;
 }
 #canvascontainer {
 	position: relative;
 	height: 300px;
 }
+
 .good {
 	color: green;
 }
@@ -119,5 +136,12 @@ export default Vue.extend({
 }
 .canvas {
 	flex: 1;
+	color: white;
+}
+.selectdiv {
+	display: inline-block;
+}
+.kana-button {
+	margin: 5px;
 }
 </style>
