@@ -1,6 +1,6 @@
 # KanaTrainer
 
-##Welcome to Kanatrainer
+## Welcome to Kanatrainer
 
 This project is meant to practise hiraganas and katakanas drawing and identification.
 
